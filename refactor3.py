@@ -8,9 +8,9 @@ import numpy as np
 def load_sdtm_data():
     """Load SDTM datasets."""
     try:
-        dm = pd.read_csv(r"C:\Users\c_pra\Downloads\SDTM\DM.csv")
-        lb = pd.read_csv(r"C:\Users\c_pra\Downloads\SDTM\LB.csv")
-        ae = pd.read_csv(r"C:\Users\c_pra\Downloads\SDTM\AE.csv")
+        dm = pd.read_csv(r"C:\Users\c_pra\Downloads\TEST\DM.csv")
+        lb = pd.read_csv(r"C:\Users\c_pra\Downloads\TEST\LB.csv")
+        ae = pd.read_csv(r"C:\Users\c_pra\Downloads\TEST\AE.csv")
         return dm, lb, ae
     except Exception as e:
         st.error(f"Error loading data: {e}")

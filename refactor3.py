@@ -4,6 +4,21 @@ import plotly.express as px
 import plotly.graph_objects as go
 from datetime import datetime
 import numpy as np
+import os 
+import logging
+
+# Change working directory to the folder where your files are located
+os.chdir("C:\\Users\\c_pra\\Downloads\\TEST")
+
+logging.basicConfig(filename='streamlit_app.log', level=logging.DEBUG, 
+                    format='%(asctime)s - %(levelname)s - %(message)s')
+
+
+# Debugging code to check file existence and working directory
+if os.path.exists("DM.csv"):
+    logging.info("DM.csv found!")
+else:
+    logging.error("DM.csv not found. Current working directory: " + os.getcwd())
 
 def load_sdtm_data():
     """Load SDTM datasets."""

@@ -8,7 +8,7 @@ import os
 import logging
 
 # Change working directory to the folder where your files are located
-os.chdir("C:\\Users\\c_pra\\Downloads\\TEST")
+# os.chdir("C:\\Users\\c_pra\\Downloads\\TEST")
 
 logging.basicConfig(filename='streamlit_app.log', level=logging.DEBUG, 
                     format='%(asctime)s - %(levelname)s - %(message)s')

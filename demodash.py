@@ -172,28 +172,45 @@ def main():
                 st.plotly_chart(fig, use_container_width=True)
         
         # Laboratory Data Tab
-        with tab3:
-            st.header("Laboratory Data Analysis")
-            
-            lab_means, abnormal_labs = analyze_lab_data(lb)
-            
-            if not lab_means.empty:
-                col1, col2 = st.columns(2)
-                
-                with col1:
-                    st.subheader("Mean Laboratory Values")
-                    fig = px.bar(lab_means,
-                                 title="Mean Values by Lab Test",
-                                 labels={'value': 'Mean Value', 'index': 'Lab Test'})
-                    st.plotly_chart(fig, use_container_width=True)
-                
-                with col2:
-                    if not abnormal_labs.empty:
-                        st.subheader("Abnormal Laboratory Results")
-                        fig = px.bar(abnormal_labs,
-                                     title="Count of Abnormal Results by Lab Test",
-                                     labels={'value': 'Count', 'index': 'Lab Test'})
-                        st.plotly_chart(fig, use_container_width=True)
+with tab3:
+    st.header("Laboratory Data Analysis")
+
+    # Analyze the laboratory data
+    lab_means, abnormal_labs = analyze_lab_data(lb)
+
+    if not lab_means.empty:
+        col1, col2 = st.columns(2)
+
+        with col1:
+            st.subheader("Mean Laboratory Values")
+
+            # Ensure proper handling of missing values
+            lab_means_filled = lab_means.fillna(0)  # Replace NaN with 0 or an appropriate default
+            fig = px.bar(
+                lab_means_filled,
+                title="Mean Values by Lab Test",
+                labels={'value': 'Mean Value', 'index': 'Lab Test'},
+                text='value'  # Add text to bars for better clarity
+            )
+            fig.update_traces(texttemplate='%{text:.2f}', textposition='outside')  # Format the text
+            fig.update_layout(yaxis_title="Mean Value", xaxis_title="Lab Test")
+            st.plotly_chart(fig, use_container_width=True)
+
+        with col2:
+            if not abnormal_labs.empty:
+                st.subheader("Abnormal Laboratory Results")
+
+                # Ensure proper handling of missing values
+                abnormal_labs_filled = abnormal_labs.fillna(0)  # Replace NaN with 0
+                fig = px.bar(
+                    abnormal_labs_filled,
+                    title="Count of Abnormal Results by Lab Test",
+                    labels={'value': 'Count', 'index': 'Lab Test'},
+                    text='value'  # Add text to bars
+                )
+                fig.update_traces(texttemplate='%{text:.0f}', textposition='outside')  # Format text for counts
+                fig.update_layout(yaxis_title="Count", xaxis_title="Lab Test")
+                st.plotly_chart(fig, use_container_width=True)
         
         # Other Tab
         with tab4:

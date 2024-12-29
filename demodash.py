@@ -1,9 +1,18 @@
+"""
+---------------------------------------------------------------------------
+Program Name   : Clinical Trial DMC Dashboard
+Programmer     : Prafulla Karki
+Date           : 2024-12-29
+Purpose        : To create a Streamlit dashboard for visualizing clinical trial 
+                 data metrics including enrollment, safety, and laboratory data.
+---------------------------------------------------------------------------
+"""
+
 import streamlit as st
 import pandas as pd
 import plotly.express as px
 from io import StringIO
 import requests
-
 
 # GitHub Data Loader
 def load_data_from_github(file_name, base_url="https://raw.githubusercontent.com/karkip-1/demo/refs/heads/main/"):
@@ -17,7 +26,6 @@ def load_data_from_github(file_name, base_url="https://raw.githubusercontent.com
         st.error(f"Error loading {file_name} from GitHub: {e}")
         return None
 
-
 # Local Data Loader
 def load_sdtm_data_local():
     """Load SDTM datasets locally."""
@@ -30,7 +38,6 @@ def load_sdtm_data_local():
         st.error(f"Error loading local data: {e}")
         return None, None, None
 
-
 # Unified Data Loader
 def load_all_data(source="github"):
     """Load all datasets based on the source."""
@@ -42,7 +49,6 @@ def load_all_data(source="github"):
         dm, lb, ae = load_sdtm_data_local()
 
     return dm, lb, ae
-
 
 def enrollment_metrics(dm):
     """Calculate enrollment metrics."""
@@ -172,45 +178,33 @@ def main():
                 st.plotly_chart(fig, use_container_width=True)
         
         # Laboratory Data Tab
-with tab3:
-    st.header("Laboratory Data Analysis")
+        with tab3:
+            st.header("Laboratory Data Analysis")
 
-    # Analyze the laboratory data
-    lab_means, abnormal_labs = analyze_lab_data(lb)
+            # Analyze the laboratory data
+            lab_means, abnormal_labs = analyze_lab_data(lb)
 
-    if not lab_means.empty:
-        col1, col2 = st.columns(2)
+            if not lab_means.empty:
+                col1, col2 = st.columns(2)
 
-        with col1:
-            st.subheader("Mean Laboratory Values")
+                with col1:
+                    st.subheader("Mean Laboratory Values")
+                    fig = px.bar(lab_means,
+                                 title="Mean Values by Lab Test",
+                                 labels={'value': 'Mean Value', 'index': 'Lab Test'})
+                    st.plotly_chart(fig, use_container_width=True)
 
-            # Ensure proper handling of missing values
-            lab_means_filled = lab_means.fillna(0)  # Replace NaN with 0 or an appropriate default
-            fig = px.bar(
-                lab_means_filled,
-                title="Mean Values by Lab Test",
-                labels={'value': 'Mean Value', 'index': 'Lab Test'},
-                text='value'  # Add text to bars for better clarity
-            )
-            fig.update_traces(texttemplate='%{text:.2f}', textposition='outside')  # Format the text
-            fig.update_layout(yaxis_title="Mean Value", xaxis_title="Lab Test")
-            st.plotly_chart(fig, use_container_width=True)
-
-        with col2:
-            if not abnormal_labs.empty:
-                st.subheader("Abnormal Laboratory Results")
-
-                # Ensure proper handling of missing values
-                abnormal_labs_filled = abnormal_labs.fillna(0)  # Replace NaN with 0
-                fig = px.bar(
-                    abnormal_labs_filled,
-                    title="Count of Abnormal Results by Lab Test",
-                    labels={'value': 'Count', 'index': 'Lab Test'},
-                    text='value'  # Add text to bars
-                )
-                fig.update_traces(texttemplate='%{text:.0f}', textposition='outside')  # Format text for counts
-                fig.update_layout(yaxis_title="Count", xaxis_title="Lab Test")
-                st.plotly_chart(fig, use_container_width=True)
+                with col2:
+                    if not abnormal_labs.empty:
+                        st.subheader("Abnormal Laboratory Results")
+                        fig = px.bar(abnormal_labs,
+                                     title="Count of Abnormal Results by Lab Test",
+                                     labels={'value': 'Count', 'index': 'Lab Test'})
+                        st.plotly_chart(fig, use_container_width=True)
+                    else:
+                        st.warning("No abnormal laboratory results found.")
+            else:
+                st.warning("Laboratory data is not available or incomplete.")
         
         # Other Tab
         with tab4:
@@ -225,9 +219,8 @@ with tab3:
                 label="Download CSV",
                 data=csv,
                 file_name="enrollment_data.csv",
-                mime="text/csv"
+                mime="text/csv",
             )
 
 if __name__ == "__main__":
     main()
-

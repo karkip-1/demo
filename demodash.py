@@ -95,8 +95,8 @@ def main():
     st.title("🏥 Clinical Trial DMC Dashboard")
     
     # Load data
-    dm, lb, ae = load_sdtm_data()
-    
+    dm, lb, ae = load_all_data()  # Update this line to use load_all_data()
+
     if dm is not None and lb is not None and ae is not None:
         # Create tabs for different sections
         tab1, tab2, tab3, tab4 = st.tabs(["Enrollment", "Safety", "Laboratory Data", "Other"])
@@ -213,3 +213,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
